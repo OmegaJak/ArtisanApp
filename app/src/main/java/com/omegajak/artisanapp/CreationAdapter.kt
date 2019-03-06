@@ -1,31 +1,33 @@
 package com.omegajak.artisanapp
 
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.creation_card.view.*
+import kotlinx.android.synthetic.main.non_arcanism_card_description.view.*
 
 const val EXTRA_CREATION = "com.omegajak.artisanapp.CREATION"
 
 class CreationAdapter(private val context: Context) : RecyclerView.Adapter<CreationAdapter.CreationViewHolder>() {
     var dailyCreationList: ArrayList<DailyCreation> = ArrayList<DailyCreation>()
+    init {
+        for (i in CreationDataManager.creationDataCollection.indices) {
+            dailyCreationList.add(DailyCreation(CreationDataManager.creationDataCollection[i], 1, 4))
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CreationViewHolder {
-        dailyCreationList.add(DailyCreation(CreationDataManager.creationDataCollection[0], 1, 4))
-
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.creation_card, parent, false)
         return CreationViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CreationViewHolder, position: Int) {
-        holder.setCreation(dailyCreationList[0])
+        holder.setCreation(dailyCreationList[position])
 
         holder.itemView.cardView.setOnClickListener {
 //            val builder: AlertDialog.Builder? = context?.let {
@@ -87,6 +89,14 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
             characteristic.text = creation.creationData.characteristic
             brief.text = creation.creationData.briefDescription
             perCreationCost.text = creation.artistryPointCost.toString()
+
+            if (creation.creationData.typeSpecificData.creationType == TypeSpecificData.CreationType.Arcanism) {
+                itemView.spellSelector.visibility = View.VISIBLE
+                itemView.creationDescriptions.visibility = View.GONE
+            } else {
+                itemView.creationDescriptions.visibility = View.VISIBLE
+                itemView.spellSelector.visibility = View.GONE
+            }
         }
 
         private fun updateNumCreations() {

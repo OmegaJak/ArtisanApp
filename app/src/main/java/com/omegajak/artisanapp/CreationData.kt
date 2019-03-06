@@ -8,8 +8,6 @@ class CreationData(val name: String,
                    val briefDescription: String,
                    val characteristic: String,
                    val tier: String,
-                   val creationType: CreationData.CreationType) : Serializable {
-    enum class CreationType {
-        Alchemy, Animation, Arcanism, Artifice
-    }
+                   val typeSpecificData : TypeSpecificData) : Serializable {
+
 }

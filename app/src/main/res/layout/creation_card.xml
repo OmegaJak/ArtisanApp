@@ -9,7 +9,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="fill_parent"
-        android:layout_height="156dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dp"
         android:clickable="true"
@@ -122,31 +122,33 @@
                     android:textColor="@android:color/holo_green_dark" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/creationCharacteristic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <include
+                android:id="@+id/creationDescriptions"
+                layout="@layout/non_arcanism_card_description"
+                android:layout_width="363dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Area of Effect: 10 foot sphere"
-                card_view:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/creationName"
-                card_view:layout_constraintVertical_bias="0.094" />
+                card_view:layout_constraintTop_toBottomOf="@+id/creationName" />
 
-            <TextView
-                android:id="@+id/creationBrief"
-                android:layout_width="0dp"
+            <include
+                android:id="@+id/spellSelector"
+                layout="@layout/arcanism_card_description"
+                android:layout_width="243dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="While activated, the wearer deals an extra 1d6 force damage to any target the wearer hits with a weapon attack."
-                card_view:layout_constraintBottom_toBottomOf="parent"
+                android:visibility="gone"
                 card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toBottomOf="@+id/creationCharacteristic" />
+                card_view:layout_constraintTop_toBottomOf="@+id/creationName"></include>
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>

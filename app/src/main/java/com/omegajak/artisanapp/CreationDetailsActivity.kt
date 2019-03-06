@@ -11,7 +11,7 @@ class CreationDetailsActivity : AppCompatActivity() {
 
         val creationData = intent.getSerializableExtra(EXTRA_CREATION) as CreationData
 
-        creationName.text = creationData.name
-        description.text = creationData.fullDescription
+        detailsCreationName.text = creationData.name
+        detailsDescription.text = creationData.fullDescription
     }
 }
