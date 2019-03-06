@@ -14,7 +14,13 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
+import kotlinx.android.synthetic.main.arcanism_card_description.view.*
+import kotlinx.android.synthetic.main.creation_card.*
+
+public val TAG: String = "CustomArtisanMessage"
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 

@@ -9,15 +9,25 @@ object CreationDataManager {
         for (i in 0..19) {
             if (i == 0) {
                 creationDataCollection.add(CreationData(
-                        name = "Level 1 Rune Stone",
+                        name = "Level 1 Rune Stone Part 1",
                         artistryPointCost = 4,
                         fullDescription = "",
                         briefDescription = "",
                         characteristic = "",
                         tier = "1st",
-                        typeSpecificData = TypeSpecificData(TypeSpecificData.CreationType.Arcanism)
+                        typeSpecificData = ArcanismData(arrayListOf("Absorb Elements", "Alarm (ritual)", "Catapult"))
                 ))
-            } else if (i >= 1) {
+            } else if (i == 1) {
+                creationDataCollection.add(CreationData(
+                        name = "Level 1 Rune Stone Part 2",
+                        artistryPointCost = 4,
+                        fullDescription = "",
+                        briefDescription = "",
+                        characteristic = "",
+                        tier = "1st",
+                        typeSpecificData = ArcanismData(arrayListOf("Cause Fear", "Charm Person", "Color Spray"))
+                ))
+            } else if (i > 1) {
                 creationDataCollection.add(CreationData(
                         name = "Kinetic Charge Gauntlet",
                         artistryPointCost = null,

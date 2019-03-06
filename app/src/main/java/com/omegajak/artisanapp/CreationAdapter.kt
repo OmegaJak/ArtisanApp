@@ -4,9 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import kotlinx.android.synthetic.main.arcanism_card_description.view.*
 import kotlinx.android.synthetic.main.creation_card.view.*
 import kotlinx.android.synthetic.main.non_arcanism_card_description.view.*
 
@@ -41,9 +46,33 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
 //            dialog?.show()
 
             val intent = Intent(context, CreationDetailsActivity::class.java).apply {
-                putExtra(EXTRA_CREATION, dailyCreationList[0].creationData)
+                putExtra(EXTRA_CREATION, dailyCreationList[position].creationData)
             }
             startActivity(context, intent, null)
+        }
+
+        val typeSpecificData = dailyCreationList[position].creationData.typeSpecificData
+        when (typeSpecificData) {
+            is ArcanismData -> {
+                val spinner = holder.itemView.spellSelector.arcansimSpellSpinner
+                ArrayAdapter<String>(
+                        context,
+                        R.layout.support_simple_spinner_dropdown_item,
+                        typeSpecificData.validSpells.toTypedArray()
+                ).also { adapter ->
+                    adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
+                    spinner.adapter = adapter
+                }
+                spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                        Log.d(TAG, "onNothingSelected")
+                    }
+
+                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                        Log.d(TAG, "onItemSelected: " + typeSpecificData.validSpells[position])
+                    }
+                }
+            }
         }
     }
 
