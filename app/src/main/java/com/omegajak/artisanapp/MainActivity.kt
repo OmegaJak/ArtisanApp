@@ -32,10 +32,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
+
             //DailyCreationManager.addCreation(DailyCreation(CreationDataManager.creationDataCollection[0], 10, 1))
-            DailyCreationManager.addCreation(DailyCreation(CreationDataManager.creationDataCollection[2], 3, 2))
+            //DailyCreationManager.addCreation(DailyCreation(CreationDataManager.creationDataCollection[2], 3, 2))
+            DailyCreationManager.toggleChoosingMode()
+            Snackbar.make(view, "Choosing mode: ${DailyCreationManager.isChoosing}", Snackbar.LENGTH_LONG).setAction("Action", null).show()
         }
 
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout

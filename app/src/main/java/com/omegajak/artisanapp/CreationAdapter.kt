@@ -36,16 +36,6 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
         holder.setCreation(DailyCreationManager.dailyCreations[position])
 
         holder.itemView.cardView.setOnClickListener {
-//            val builder: AlertDialog.Builder? = context?.let {
-//                AlertDialog.Builder(it)
-//            }
-//
-//            builder?.setMessage("Test Dialogueususususu")
-//                    ?.setTitle("Test Title2")
-//
-//            val dialog = builder?.create()
-//            dialog?.show()
-
             val intent = Intent(context, CreationDetailsActivity::class.java).apply {
                 putExtra(EXTRA_CREATION, creation(position).creationData)
             }

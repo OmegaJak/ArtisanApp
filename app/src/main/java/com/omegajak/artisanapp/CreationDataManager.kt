@@ -6,7 +6,7 @@ object CreationDataManager {
     val creationDataCollection = ArrayList<CreationData>()
 
     init {
-        for (i in 0..19) {
+        for (i in 0..2) {
             if (i == 0) {
                 creationDataCollection.add(CreationData(
                         name = "Level 1 Rune Stone Part 1",

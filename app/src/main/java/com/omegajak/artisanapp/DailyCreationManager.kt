@@ -15,6 +15,7 @@ object DailyCreationManager {
             field = value
             onTotalCreationsCostUpdated?.invoke(value)
         }
+    var isChoosing = false
 
     var onDailyCreationAdded: (() -> Unit)? = null
     var onDailyCreationRemoved: ((position: Int) -> Unit)? = null
@@ -25,6 +26,11 @@ object DailyCreationManager {
     }
 
     fun save() {
+        // This is bad
+        updateTotalCreationsCost()
+
+        if (isChoosing) return
+
         val str = gson.toJson(dailyCreations)
         Log.d(TAG, "Saved: $str")
 
@@ -33,9 +39,6 @@ object DailyCreationManager {
         context.openFileOutput(filename, Context.MODE_PRIVATE).use {
             it.write(str.toByteArray())
         }
-
-        // This is bad
-        updateTotalCreationsCost()
     }
 
 
@@ -74,6 +77,43 @@ object DailyCreationManager {
         }
 
         totalCreationsCost = newTotal
+    }
+
+    fun toggleChoosingMode() {
+        if (!isChoosing) {
+            isChoosing = true
+
+            for (i in 0 until dailyCreations.size) {
+                removeCreation(dailyCreations[0])
+            }
+
+            for (creationData in CreationDataManager.creationDataCollection) {
+                var cost = creationData.artistryPointCost
+                if (cost == null) cost = 4
+                when (creationData.typeSpecificData) {
+                    is ArcanismData -> {
+                        for (spell in creationData.typeSpecificData.validSpells) {
+                            addCreation(DailyCreation(creationData, 0, cost, spell))
+                        }
+                    }
+                    else -> {
+                        addCreation(DailyCreation(creationData, 0, cost))
+                    }
+                }
+            }
+        } else {
+            val creationsToRemove = ArrayList<DailyCreation>()
+            for (dailyCreation in dailyCreations) {
+                if (dailyCreation.numMade == 0) creationsToRemove.add(dailyCreation)
+            }
+
+            for (creationToRemove in creationsToRemove) {
+                removeCreation(creationToRemove)
+            }
+
+            isChoosing = false
+            save()
+        }
     }
 
     private val gson = GsonBuilder().registerTypeAdapter<TypeSpecificData> {

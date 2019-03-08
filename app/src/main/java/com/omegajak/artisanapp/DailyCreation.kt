@@ -22,7 +22,11 @@ class DailyCreation(var creationData: CreationData, numMade: Int, var artistryPo
 
     fun decrementNumMade() {
         if (numMade > 0) numMade--
-        if (numMade == 0) DailyCreationManager.removeCreation(this)
+        if (numMade <= 0 && !DailyCreationManager.isChoosing) DailyCreationManager.removeCreation(this)
+    }
+
+    fun resetNumMade() {
+        numMade = 0
     }
 
     fun getTotalCost() : Int {
