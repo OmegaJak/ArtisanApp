@@ -1,15 +1,14 @@
 package com.omegajak.artisanapp
 
 import android.content.Context
-import com.google.gson.*
-import com.google.gson.reflect.TypeToken
+import com.github.salomonbrys.kotson.*
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
 object DailyCreationManager {
     var dailyCreations = ArrayList<DailyCreation>()
-    val dailyCreationsType = object: TypeToken<ArrayList<DailyCreation>>() {}.type
-    val typeSpecificDataType = object: TypeToken<TypeSpecificData>() {}.type
 
     var onDailyCreationAdded: (() -> Unit)? = null
     var onDailyCreationRemoved: ((position: Int) -> Unit)? = null
@@ -23,21 +22,6 @@ object DailyCreationManager {
     }
 
     fun save() {
-        val serializer = JsonSerializer<TypeSpecificData> { typeSpecificData: TypeSpecificData, _, jsonSerializationContext: JsonSerializationContext ->
-            val json = JsonObject()
-
-            json.addProperty(typeSpecificData::creationType.name, typeSpecificData.creationType.toString())
-
-            when (typeSpecificData) {
-                is ArcanismData -> {
-                    json.add(typeSpecificData::validSpells.name, jsonSerializationContext.serialize(typeSpecificData.validSpells, object: TypeToken<ArrayList<String>>() {}.type))
-                }
-            }
-
-            json
-        }
-        val gson: Gson = GsonBuilder().registerTypeAdapter(typeSpecificDataType, serializer).create()
-
         val str = gson.toJson(dailyCreations)
 
         val context: Context = ArtisanApplication.getContext()
@@ -49,28 +33,6 @@ object DailyCreationManager {
 
 
     fun load() {
-        var deserializer = JsonDeserializer<TypeSpecificData> { jsonElement: JsonElement, _, jsonDeserializationContext: JsonDeserializationContext ->
-            val jsonObj = jsonElement.asJsonObject
-            var result: TypeSpecificData
-
-            val creationType: TypeSpecificData.CreationType = TypeSpecificData.CreationType.valueOf(jsonObj.get(TypeSpecificData::creationType.name).asString)
-            if (creationType == TypeSpecificData.CreationType.Arcanism || jsonObj.has(ArcanismData::validSpells.name)) {
-                var spells: ArrayList<String> = ArrayList()
-                if (jsonObj.has(ArcanismData::validSpells.name)) {
-                    val jsonArr = jsonObj.get(ArcanismData::validSpells.name)
-                    spells = jsonDeserializationContext.deserialize(jsonArr, object: TypeToken<ArrayList<String>>() {}.type)
-                }
-
-                result = ArcanismData(spells)
-            } else {
-                result = TypeSpecificData(creationType)
-            }
-
-            result
-        }
-        val gson = GsonBuilder().registerTypeAdapter(typeSpecificDataType, deserializer).create()
-        //val gson = Gson()
-
         val context: Context = ArtisanApplication.getContext()
         val filename = "creations.json"
 
@@ -79,7 +41,7 @@ object DailyCreationManager {
         //val text = reader.readText()
         //Log.d(TAG, text)
 
-        dailyCreations = gson.fromJson(reader, dailyCreationsType)
+        dailyCreations = gson.fromJson(reader)
     }
 
     fun addCreation(creation : DailyCreation) {
@@ -95,5 +57,38 @@ object DailyCreationManager {
         save()
     }
 
-    inline fun <reified T> Gson.fromJson(json: String) = this.fromJson<T>(json, object: TypeToken<T>() {}.type)
+    private val gson = GsonBuilder().registerTypeAdapter<TypeSpecificData> {
+        serialize {
+            val json: JsonObject = jsonObject(
+                    it.src::creationType.name to it.src.creationType.toString()
+            )
+
+            when (it.src) {
+                is ArcanismData -> {
+                    json.addProperty((it.src as ArcanismData)::validSpells.name, it.context.serialize((it.src as ArcanismData).validSpells))
+                }
+            }
+
+            json
+        }
+
+        deserialize {
+            val jsonObj = it.json.asJsonObject
+            var result: TypeSpecificData
+
+            val creationType: TypeSpecificData.CreationType = TypeSpecificData.CreationType.valueOf(jsonObj.get(TypeSpecificData::creationType.name).asString)
+            if (creationType == TypeSpecificData.CreationType.Arcanism || jsonObj.has(ArcanismData::validSpells.name)) {
+                var spells: ArrayList<String> = ArrayList()
+                if (jsonObj.has(ArcanismData::validSpells.name)) {
+                    spells = it.context.deserialize(jsonObj.get(ArcanismData::validSpells.name))
+                }
+
+                result = ArcanismData(spells)
+            } else {
+                result = TypeSpecificData(creationType)
+            }
+
+            result
+        }
+    }.create()
 }
