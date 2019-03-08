@@ -1,6 +1,7 @@
 package com.omegajak.artisanapp
 
 import android.content.Context
+import android.util.Log
 import com.github.salomonbrys.kotson.*
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
@@ -23,6 +24,7 @@ object DailyCreationManager {
 
     fun save() {
         val str = gson.toJson(dailyCreations)
+        Log.d(TAG, "Saved: $str")
 
         val context: Context = ArtisanApplication.getContext()
         val filename = "creations.json"

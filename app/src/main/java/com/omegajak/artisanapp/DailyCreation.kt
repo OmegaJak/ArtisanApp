@@ -1,17 +1,20 @@
 package com.omegajak.artisanapp
 
-import kotlin.properties.Delegates
-
-class DailyCreation(var creationData: CreationData, numMade: Int, var artistryPointCost: Int = creationData.artistryPointCost!!) {
-    var numMade : Int = numMade
+class DailyCreation(var creationData: CreationData, numMade: Int, var artistryPointCost: Int = creationData.artistryPointCost!!, currentSpell: String? = null) {
+    var numMade: Int = numMade
         private set(value) {
             field = value
             onNumMadeChanged?.invoke()
             DailyCreationManager.save()
         }
 
-
     @Transient var onNumMadeChanged: (() -> Unit)? = null
+
+    var currentSpell: String? = currentSpell
+        set(value) {
+            field = value
+            DailyCreationManager.save()
+        }
 
     fun incrementNumMade() {
         numMade++

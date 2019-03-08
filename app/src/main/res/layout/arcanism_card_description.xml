@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <Spinner
-        android:id="@+id/arcansimSpellSpinner"
+        android:id="@+id/arcanismSpellSpinner"
         android:layout_width="395dp"
         android:layout_height="40dp"
         android:background="@color/colorAccent"
