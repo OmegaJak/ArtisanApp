@@ -17,7 +17,7 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
-import kotlinx.android.synthetic.main.arcanism_card_description.view.*
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.creation_card.*
 
 public val TAG: String = "CustomArtisanMessage"
@@ -47,6 +47,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView = findViewById<View>(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
+        DailyCreationManager.onTotalCreationsCostUpdated = {
+            allCreationsCost.text = it.toString()
+        }
         DailyCreationManager.load()
 
         val recyclerView = findViewById<RecyclerView>(R.id.creationsRecyclerView)

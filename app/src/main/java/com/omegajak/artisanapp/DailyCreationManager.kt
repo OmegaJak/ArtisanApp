@@ -10,13 +10,15 @@ import java.io.InputStreamReader
 
 object DailyCreationManager {
     var dailyCreations = ArrayList<DailyCreation>()
+    var totalCreationsCost = 0
+        private set(value) {
+            field = value
+            onTotalCreationsCostUpdated?.invoke(value)
+        }
 
     var onDailyCreationAdded: (() -> Unit)? = null
     var onDailyCreationRemoved: ((position: Int) -> Unit)? = null
-
-    init {
-        dailyCreations.add(DailyCreation(CreationDataManager.creationDataCollection[0], 10, 1))
-    }
+    var onTotalCreationsCostUpdated: ((newTotalCost: Int) -> Unit)? = null
 
     fun numDistinctDailyCreations() : Int {
         return dailyCreations.size
@@ -31,6 +33,9 @@ object DailyCreationManager {
         context.openFileOutput(filename, Context.MODE_PRIVATE).use {
             it.write(str.toByteArray())
         }
+
+        // This is bad
+        updateTotalCreationsCost()
     }
 
 
@@ -44,6 +49,7 @@ object DailyCreationManager {
         //Log.d(TAG, text)
 
         dailyCreations = gson.fromJson(reader)
+        updateTotalCreationsCost() // This is also bad
     }
 
     fun addCreation(creation : DailyCreation) {
@@ -54,9 +60,20 @@ object DailyCreationManager {
 
     fun removeCreation(creation: DailyCreation) {
         val index = dailyCreations.indexOf(creation)
+        if (index == -1) return
+
         dailyCreations.removeAt(index)
         onDailyCreationRemoved?.invoke(index)
         save()
+    }
+
+    fun updateTotalCreationsCost() {
+        var newTotal = 0
+        for (creation in dailyCreations) {
+            newTotal += creation.getTotalCost()
+        }
+
+        totalCreationsCost = newTotal
     }
 
     private val gson = GsonBuilder().registerTypeAdapter<TypeSpecificData> {
