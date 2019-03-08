@@ -8,6 +8,4 @@ class CreationData(val name: String,
                    val briefDescription: String,
                    val characteristic: String,
                    val tier: String,
-                   val typeSpecificData : TypeSpecificData) : Serializable {
-
-}
+                   val typeSpecificData : TypeSpecificData) : Serializable

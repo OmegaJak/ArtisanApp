@@ -18,10 +18,13 @@ import kotlinx.android.synthetic.main.non_arcanism_card_description.view.*
 const val EXTRA_CREATION = "com.omegajak.artisanapp.CREATION"
 
 class CreationAdapter(private val context: Context) : RecyclerView.Adapter<CreationAdapter.CreationViewHolder>() {
-    var dailyCreationList: ArrayList<DailyCreation> = ArrayList<DailyCreation>()
     init {
-        for (i in CreationDataManager.creationDataCollection.indices) {
-            dailyCreationList.add(DailyCreation(CreationDataManager.creationDataCollection[i], 1, 4))
+        DailyCreationManager.onDailyCreationAdded = {
+            notifyItemInserted(DailyCreationManager.dailyCreations.size - 1)
+        }
+
+        DailyCreationManager.onDailyCreationRemoved = { position ->
+            notifyItemRemoved(position)
         }
     }
 
@@ -32,7 +35,7 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
     }
 
     override fun onBindViewHolder(holder: CreationViewHolder, position: Int) {
-        holder.setCreation(dailyCreationList[position])
+        holder.setCreation(DailyCreationManager.dailyCreations[position])
 
         holder.itemView.cardView.setOnClickListener {
 //            val builder: AlertDialog.Builder? = context?.let {
@@ -46,12 +49,12 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
 //            dialog?.show()
 
             val intent = Intent(context, CreationDetailsActivity::class.java).apply {
-                putExtra(EXTRA_CREATION, dailyCreationList[position].creationData)
+                putExtra(EXTRA_CREATION, DailyCreationManager.dailyCreations[position].creationData)
             }
             startActivity(context, intent, null)
         }
 
-        val typeSpecificData = dailyCreationList[position].creationData.typeSpecificData
+        val typeSpecificData = DailyCreationManager.dailyCreations[position].creationData.typeSpecificData
         when (typeSpecificData) {
             is ArcanismData -> {
                 val spinner = holder.itemView.spellSelector.arcansimSpellSpinner
@@ -77,7 +80,7 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
     }
 
     override fun getItemCount(): Int {
-        return 20
+        return DailyCreationManager.numDistinctDailyCreations()
     }
 
     class CreationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -91,28 +94,23 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
         val decrementButton = itemView.decrementCreations
         init {
             decrementButton.setOnClickListener {
-                if (currentNumCreations > 0) currentNumCreations--
+                creation.decrementNumMade()
             }
         }
-
-        var currentNumCreations = 1
-            set(value) {
-                field = value
-                updateNumCreations()
-            }
 
         val currentNumCreationsTextView = itemView.currentNumCreations
         val incrementButton = itemView.incrementCreations
         init {
             incrementButton.setOnClickListener {
-                currentNumCreations++
+                creation.incrementNumMade()
             }
         }
 
-        private var creation: DailyCreation? = null
+        private lateinit var creation: DailyCreation
 
         fun setCreation(creation: DailyCreation) {
             this.creation = creation
+            creation.onNumMadeChanged = { updateNumCreations()}
 
             name.text = creation.creationData.name
             characteristic.text = creation.creationData.characteristic
@@ -126,11 +124,13 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
                 itemView.creationDescriptions.visibility = View.VISIBLE
                 itemView.spellSelector.visibility = View.GONE
             }
+
+            updateNumCreations()
         }
 
         private fun updateNumCreations() {
-            currentNumCreationsTextView.text = currentNumCreations.toString()
-            totalCreationCost.text = (currentNumCreations * creation!!.artistryPointCost).toString()
+            currentNumCreationsTextView.text = creation.numMade.toString()
+            totalCreationCost.text = creation.getTotalCost().toString()
         }
     }
 }

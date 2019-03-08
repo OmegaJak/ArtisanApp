@@ -32,8 +32,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val fab = findViewById<View>(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+            DailyCreationManager.addCreation(DailyCreation(CreationDataManager.creationDataCollection[0], 10, 1))
         }
 
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
@@ -45,8 +46,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView = findViewById<View>(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
 
+        DailyCreationManager.load()
+
         val recyclerView = findViewById<RecyclerView>(R.id.creationsRecyclerView)
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val creationAdapter = CreationAdapter(this)

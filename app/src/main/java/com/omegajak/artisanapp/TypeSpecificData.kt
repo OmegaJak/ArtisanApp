@@ -1,6 +1,8 @@
 package com.omegajak.artisanapp
 
-open class TypeSpecificData(val creationType: CreationType) {
+import java.io.Serializable
+
+open class TypeSpecificData(val creationType: CreationType) : Serializable {
     enum class CreationType {
         Alchemy, Animation, Arcanism, Artifice
     }
