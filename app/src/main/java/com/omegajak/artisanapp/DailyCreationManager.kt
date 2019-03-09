@@ -112,7 +112,7 @@ object DailyCreationManager {
             }
 
             isChoosing = false
-            
+
             // Trigger num creations updates on the views to add use button... this is very bad
             for (dailyCreation in dailyCreations) {
                 dailyCreation.incrementNumMade()
