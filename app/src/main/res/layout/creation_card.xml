@@ -11,7 +11,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="0dp"
         android:clickable="true"
         android:foreground="?attr/selectableItemBackground"
         card_view:cardCornerRadius="2dp"
@@ -19,7 +22,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             tools:layout_editor_absoluteX="10dp"
             tools:layout_editor_absoluteY="10dp">
 
@@ -151,7 +155,36 @@
                 card_view:layout_constraintTop_toBottomOf="@+id/creationName"></include>
 
         </android.support.constraint.ConstraintLayout>
+
     </android.support.v7.widget.CardView>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:elevation="5dp"
+        android:paddingRight="5dp">
+
+        <Button
+            android:id="@+id/useCreationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_dark"
+            android:text="Use"
+            android:textColor="@android:color/white"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/splitCreationButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_light"
+            android:text="Split"
+            android:textColor="@android:color/white"
+            card_view:layout_constraintEnd_toStartOf="@+id/useCreationButton"
+            card_view:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
 
 </LinearLayout>

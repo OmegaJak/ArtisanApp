@@ -107,6 +107,26 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
             }
         }
 
+        val useCreationButton = itemView.useCreationButton
+        init {
+            useCreationButton.setOnClickListener {
+                creation.decrementNumMade()
+            }
+        }
+
+        val splitCreationButton = itemView.splitCreationButton
+        init {
+            splitCreationButton.setOnClickListener {
+                if (creation.creationData.typeSpecificData.creationType != TypeSpecificData.CreationType.Arcanism)
+                    throw Exception("Somehow a split was allowed on a non-arcanism creation")
+
+                if (creation.numMade > 1) {
+                    creation.decrementNumMade()
+                    DailyCreationManager.addCreation(DailyCreation(creation.creationData, 1, creation.artistryPointCost))
+                }
+            }
+        }
+
         private lateinit var creation: DailyCreation
 
         fun setCreation(creation: DailyCreation) {
@@ -121,15 +141,31 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
             if (creation.creationData.typeSpecificData.creationType == TypeSpecificData.CreationType.Arcanism) {
                 itemView.spellSelector.visibility = View.VISIBLE
                 itemView.creationDescriptions.visibility = View.GONE
+                splitCreationButton.visibility = View.VISIBLE
             } else {
                 itemView.creationDescriptions.visibility = View.VISIBLE
                 itemView.spellSelector.visibility = View.GONE
+                splitCreationButton.visibility = View.GONE
             }
 
             updateNumCreations()
         }
 
         private fun updateNumCreations() {
+            if (creation.creationData.typeSpecificData.creationType == TypeSpecificData.CreationType.Arcanism) {
+                if (creation.numMade > 1 && !DailyCreationManager.isChoosing) {
+                    splitCreationButton.visibility = View.VISIBLE
+                } else {
+                    splitCreationButton.visibility = View.GONE
+                }
+            }
+
+            if (DailyCreationManager.isChoosing) {
+                useCreationButton.visibility = View.GONE
+            } else {
+                useCreationButton.visibility = View.VISIBLE
+            }
+
             currentNumCreationsTextView.text = creation.numMade.toString()
             totalCreationCost.text = creation.getTotalCost().toString()
         }
