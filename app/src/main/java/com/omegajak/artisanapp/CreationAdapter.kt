@@ -153,7 +153,7 @@ class CreationAdapter(private val context: Context) : RecyclerView.Adapter<Creat
 
         private fun updateNumCreations() {
             if (creation.creationData.typeSpecificData.creationType == TypeSpecificData.CreationType.Arcanism) {
-                if (creation.numMade > 1 && !DailyCreationManager.isChoosing) {
+                if (creation.numMade > 1) {
                     splitCreationButton.visibility = View.VISIBLE
                 } else {
                     splitCreationButton.visibility = View.GONE

@@ -29,6 +29,17 @@ object CreationDataManager {
         ))
 
         creationDataCollection.add(CreationData(
+                name = "Level 3 Rune Stone",
+                artistryPointCost = 5,
+                fullDescription = "",
+                briefDescription = "",
+                characteristic = "",
+                tier = "2nd",
+                typeSpecificData = ArcanismData(arrayListOf("Blink", "Call Lightning", "Clairvoyance", "Enemies Abound", "Fear", "Glyph of Warding", "Leomund's Tiny Hut (ritual)",
+                        "Meld Into Stone (ritual)", "Melf's Minute Meteors", "Sending", "Wall of Sand", "Wall of Water"))
+        ))
+
+        creationDataCollection.add(CreationData(
                 name = "Kinetic Charge Gauntlet",
                 artistryPointCost = null,
                 fullDescription = "The gauntlet has charges equal to the amount of artistry points used in its creation divided by four. As a bonus action," +

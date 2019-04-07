@@ -90,16 +90,7 @@ object DailyCreationManager {
             for (creationData in CreationDataManager.creationDataCollection) {
                 var cost = creationData.artistryPointCost
                 if (cost == null) cost = 4
-                when (creationData.typeSpecificData) {
-                    is ArcanismData -> {
-                        for (spell in creationData.typeSpecificData.validSpells) {
-                            addCreation(DailyCreation(creationData, 0, cost, spell))
-                        }
-                    }
-                    else -> {
-                        addCreation(DailyCreation(creationData, 0, cost))
-                    }
-                }
+                addCreation(DailyCreation(creationData, 0, cost))
             }
         } else {
             val creationsToRemove = ArrayList<DailyCreation>()

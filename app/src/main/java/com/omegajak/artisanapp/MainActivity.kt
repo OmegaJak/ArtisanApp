@@ -1,5 +1,7 @@
 package com.omegajak.artisanapp
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -35,8 +37,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             //DailyCreationManager.addCreation(DailyCreation(CreationDataManager.creationDataCollection[0], 10, 1))
             //DailyCreationManager.addCreation(DailyCreation(CreationDataManager.creationDataCollection[2], 3, 2))
-            DailyCreationManager.toggleChoosingMode()
-            Snackbar.make(view, "Choosing mode: ${DailyCreationManager.isChoosing}", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+
+            if (DailyCreationManager.isChoosing) {
+                DailyCreationManager.toggleChoosingMode()
+
+                Snackbar.make(view, "Choosing mode: ${DailyCreationManager.isChoosing}", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+            } else {
+                val builder: AlertDialog.Builder? = this.let {
+                    AlertDialog.Builder(it)
+                }
+
+                builder?.setMessage("longRestConfirm")
+                        ?.setTitle("Are you sure?")
+                        ?.setPositiveButton("Yes") { dialogInterface: DialogInterface, i: Int ->
+                            DailyCreationManager.toggleChoosingMode()
+
+                            Snackbar.make(view, "Choosing mode: ${DailyCreationManager.isChoosing}", Snackbar.LENGTH_LONG).setAction("Action", null).show()
+                        }
+                        ?.setNegativeButton("No", null)
+
+                val dialog: AlertDialog? = builder?.create()
+                dialog?.show()
+            }
+
         }
 
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
